@@ -234,40 +234,40 @@ def main():
     # controlled by the options.npics parameter
         if csv_data is None:
             file_path = os.path.join(options.working_directory, options.file)
-            assert os.path.isfile(file_path), "Not a valid file %s" % path
-            assert path.endswith(".csv"), "Unknown suffix %s" % path.split(".")[-1]
+            assert os.path.isfile(file_path), "Not a valid file %s" % file_path
+            assert file_path.endswith(".csv"), "Unknown suffix %s" % file_path.split(".")[-1]
             csv_data = pandas.read_csv(file_path)
         if options.result == "average":
-            csv_data["Average"] = csv_data[["InvSpectSTDNorm", "SpatEntNorm"]].mean(axis=1)
-            csv_data.sort(columns="Average", ascending=False, inplace=True)
+            csv_data["Average"] = csv_data[["MeanBinNorm", "KurtosisNorm", "SpectSTDNorm"]].mean(axis=1)
+            csv_data.sort_values(by="Average", axis='index',ascending=False, inplace=True)
         elif options.result == "fskew":
-            csv_data.sort(columns="SkewNorm", ascending=False, inplace=True)
+            csv_data.sort_values(by="SkewNorm", axis='index', ascending=False, inplace=True)
         elif options.result == "fentropy":
-            csv_data.sort(columns="SpectEntNorm", ascending=False, inplace=True)
+            csv_data.sort_values(by="SpectEntNorm", axis='index', ascending=False, inplace=True)
         elif options.result == "ientropy":
-            csv_data.sort(columns="SpatEntNorm", ascending=False, inplace=True)
+            csv_data.sort_values(by="SpatEntNorm", axis='index', ascending=False, inplace=True)
         elif options.result == "icv":
-            csv_data.sort(columns="SpatEntNorm", ascending=False, inplace=True)
+            csv_data.sort_values(by="SpatEntNorm", axis='index', ascending=False, inplace=True)
         elif options.result == "fstd":
-            csv_data.sort(columns="SpectSTDNorm", ascending=False, inplace=True)
+            csv_data.sort_values(by="SpectSTDNorm", axis='index', ascending=False, inplace=True)
         elif options.result == "fkurtosis":
-            csv_data.sort(columns="KurtosisNorm", ascending=False, inplace=True)
+            csv_data.sort_values(by="KurtosisNorm", axis='index', ascending=False, inplace=True)
         elif options.result == "fpw":
-            csv_data.sort(columns="SpectHighPowerNorm", ascending=False, inplace=True)
+            csv_data.sort_values(by="SpectHighPowerNorm", axis='index', ascending=False, inplace=True)
         elif options.result == "fmean":
-            csv_data.sort(columns="SpectHighPowerNorm", ascending=False, inplace=True)
+            csv_data.sort_values(by="SpectHighPowerNorm", axis='index', ascending=False, inplace=True)
         elif options.result == "meanbin":
-            csv_data.sort(columns="MeanBinNorm", ascending=False, inplace=True)
+            csv_data.sort_values(by="MeanBinNorm", axis='index', ascending=False, inplace=True)
         else:
             print("Unknown results sorting method %s" % options.result)
             sys.exit()
 
-        best_pics = csv_data["Filename"].head(options.npics).as_matrix()
-        worst_pics = csv_data["Filename"].tail(options.npics).as_matrix()
-        utils.show_pics_from_disk(best_pics, title="BEST PICS")
-        utils.show_pics_from_disk(worst_pics, title="WORST PICS")
-
-        csv_data.to_csv(file_path, index=False)
+        # best_pics = csv_data["Filename"].head(options.npics).as_matrix()
+        # worst_pics = csv_data["Filename"].tail(options.npics).as_matrix()
+        # utils.show_pics_from_disk(best_pics, title="BEST PICS")
+        # utils.show_pics_from_disk(worst_pics, title="WORST PICS")
+        # print(csv_data["Filename"])
+        csv_data.to_csv(options.working_directory + '/image_quality_ranking.csv', index=False)
 
 
 if __name__ == "__main__":
